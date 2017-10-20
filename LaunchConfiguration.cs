@@ -23,8 +23,8 @@ namespace Divinitor.DN.Athena.Lib.Launcher
         {
             get
             {
-                var ips = string.Join(";", LoginServers.Select(i => i.Addr));
-                var ports = string.Join(";", LoginServers.Select(i => i.Port));
+                var ips = string.Join(";", this.LoginServers.Select(i => i.Addr));
+                var ports = string.Join(";", this.LoginServers.Select(i => i.Port));
                 var ret = $"/ip:{ips} /port:{ports} /Lver:{this.Lver}";
                 if (this.UsePacking)
                 {

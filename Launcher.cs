@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace Divinitor.DN.Athena.Lib.Launcher
 {
@@ -85,32 +87,23 @@ namespace Divinitor.DN.Athena.Lib.Launcher
             }
         }
 
-        public async Task<LaunchConfiguration> GetLaunchConfiguration(Uri patchConfigListUri, string dnExecutablePath)
+        public LaunchConfiguration GetLaunchConfiguration(ServerLocal server, string dnExecutablePath)
         {
             var launchConfig = new LaunchConfiguration {DragonNestExePath = dnExecutablePath};
-
-            var cfgList = await HttpClient.GetStringAsync(patchConfigListUri);
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(cfgList);
-            // TODO This only supports NA's single server
-            XmlNodeList loginServers = doc.GetElementsByTagName("login");
-
-            for (var i = 0; i < loginServers.Count; ++i)
-            {
-                var server = loginServers[i];
-                if (server.Attributes == null)
-                {
-                    continue;
-                }
-
-                launchConfig.LoginServers.Add(new LoginServerInfo()
-                {
-                    Addr = server.Attributes["addr"].Value,
-                    Port = Convert.ToInt32(server.Attributes["port"].Value)
-                });
-            }
-
+            server.Login.ToList().ForEach(launchConfig.LoginServers.Add);
+            
             return launchConfig;
+        }
+
+        public async Task<ChannelList> GetChannels(Uri patchConfigListUri)
+        {
+            var cfgList = await this.HttpClient.GetStringAsync(patchConfigListUri);
+
+            var serializer = new XmlSerializer(typeof(PatchConfigList));
+            using (var reader = new StringReader(cfgList))
+            {
+                return ((PatchConfigList) serializer.Deserialize(reader)).ChannelList.First();
+            }
         }
     }
 }
