@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("dv-athena-launcher")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Launcher library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("dv-athena-launcher")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCompany("Divinitor")]
+[assembly: AssemblyProduct("Athena-Launcher-Lib")]
+[assembly: AssemblyCopyright("Copyright © Vahr 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
