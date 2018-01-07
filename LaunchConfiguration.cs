@@ -11,12 +11,21 @@ namespace Divinitor.DN.Athena.Lib.Launcher
     {
         public string DragonNestExePath { get; set; }
 
-        public int Lver { get; set; } = 2;
+        [Obsolete]
+        public int Lver { get; set; }
 
-        public bool UsePacking { get; set; } = true;
+        [Obsolete]
+        public bool UsePacking { get; set; }
 
-        public bool Standalone { get; set; } = true;
+        public bool UnusePacking { get; set; }
+
+        [Obsolete]
+        public bool Standalone { get; set; }
         
+        public string Token { get; set; }
+
+        public bool UiTest { get; set; }
+
         public IList<LoginServerInfo> LoginServers { get; set; }
 
         public string CommandLineParams
@@ -25,14 +34,30 @@ namespace Divinitor.DN.Athena.Lib.Launcher
             {
                 var ips = string.Join(";", this.LoginServers.Select(i => i.Addr));
                 var ports = string.Join(";", this.LoginServers.Select(i => i.Port));
-                var ret = $"/ip:{ips} /port:{ports} /Lver:{this.Lver}";
+                var ret = $"/ip:{ips} /port:{ports}";
+                if (this.Lver != 0)
+                {
+                    ret += $" /Lver:{this.Lver}";
+                }
                 if (this.UsePacking)
                 {
                     ret += " /use_packing";
                 }
+                if (this.UnusePacking)
+                {
+                    ret += " /unuse_packing";
+                }
                 if (this.Standalone)
                 {
                     ret += " /stand_alone";
+                }
+                if (!string.IsNullOrEmpty(this.Token))
+                {
+                    ret += $" /ttoken:{this.Token}";
+                }
+                if (this.UiTest)
+                {
+                    ret += " /uitest";
                 }
                 return ret;
             }
