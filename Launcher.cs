@@ -44,8 +44,33 @@ namespace Divinitor.DN.Athena.Lib.Launcher
             return handles;
         }
 
-        public Process Launch(LaunchConfiguration launchConfig)
+        public delegate void OnSuspendedLaunch(ProcessInformation pi);
+
+        public Process Launch(LaunchConfiguration launchConfig, bool startSuspended = false, OnSuspendedLaunch handler = null)
         {
+            if (startSuspended)
+            {
+                var si = new Startupinfo();
+                var pi = new ProcessInformation();
+                var success = NativeMethods.CreateProcess(launchConfig.DragonNestExePath,
+                    "\"dragonnest.exe\" " + launchConfig.CommandLineParams,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    false,
+                    ProcessCreationFlags.CREATE_SUSPENDED,
+                    IntPtr.Zero,
+                    Directory.GetParent(launchConfig.DragonNestExePath).FullName,
+                    ref si,
+                    out pi);
+
+                if (success)
+                {
+                    handler?.Invoke(pi);
+                    NativeMethods.ResumeThread(pi.hThread);
+                    return Process.GetProcessById((int) pi.dwProcessId);
+                }
+            }
+
             var proc = new Process
             {
                 StartInfo =

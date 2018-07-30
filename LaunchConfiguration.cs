@@ -35,6 +35,7 @@ namespace Divinitor.DN.Athena.Lib.Launcher
                 var ips = string.Join(";", this.LoginServers.Select(i => i.Addr));
                 var ports = string.Join(";", this.LoginServers.Select(i => i.Port));
                 var ret = $"/ip:{ips} /port:{ports}";
+#pragma warning disable CS0612 // Type or member is obsolete
                 if (this.Lver != 0)
                 {
                     ret += $" /Lver:{this.Lver}";
@@ -51,6 +52,7 @@ namespace Divinitor.DN.Athena.Lib.Launcher
                 {
                     ret += " /stand_alone";
                 }
+#pragma warning restore CS0612 // Type or member is obsolete
                 if (!string.IsNullOrEmpty(this.Token))
                 {
                     ret += $" /ttoken:{this.Token}";
