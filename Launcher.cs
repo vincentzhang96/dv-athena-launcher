@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -85,7 +86,7 @@ namespace Divinitor.DN.Athena.Lib.Launcher
             return proc;
         }
 
-        public async Task<Process> WaitForGameWindowAsync(Process proc)
+        public async Task<Process> WaitForGameWindowAsync(Process proc, CancellationToken cancelToken = default(CancellationToken))
         {
             while (true)
             {
@@ -99,7 +100,7 @@ namespace Divinitor.DN.Athena.Lib.Launcher
                         if (res != 0 && "DRAGONNEST" == clsName.ToString())
                         {
                             // Small delay just in case
-                            await Task.Delay(500);
+                            await Task.Delay(500, cancelToken);
                             return proc;
                         }
                     }
@@ -108,7 +109,7 @@ namespace Divinitor.DN.Athena.Lib.Launcher
                 {
                     // Ignored
                 }
-                await Task.Delay(1000);
+                await Task.Delay(1000, cancelToken);
             }
         }
 
