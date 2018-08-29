@@ -26,6 +26,8 @@ namespace Divinitor.DN.Athena.Lib.Launcher
 
         public bool UiTest { get; set; }
 
+        public string Language { get; set; }
+
         public IList<LoginServerInfo> LoginServers { get; set; }
 
         public string CommandLineParams
@@ -60,6 +62,10 @@ namespace Divinitor.DN.Athena.Lib.Launcher
                 if (this.UiTest)
                 {
                     ret += " /uitest";
+                }
+                if (!string.IsNullOrEmpty(this.Language))
+                {
+                    ret += $" /language:{this.Language}";
                 }
                 return ret;
             }
